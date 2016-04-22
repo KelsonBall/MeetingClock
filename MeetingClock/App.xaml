@@ -6,5 +6,14 @@
     <Application.Resources>
         <converters:DoubleToCurrencyConverter x:Key="DoubleToCurrencyConverter" />
         <converters:IntToCurrencyConverter x:Key="IntToCurrencyConverter" />
+        <Style x:Key="BigText" TargetType="TextBox">
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="FontFamily" Value="Courier New" />
+            <Setter Property="FontSize" Value="24" />
+        </Style>
+        <Style x:Key="BigTextBlock" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Courier New" />
+            <Setter Property="FontSize" Value="24" />
+        </Style>
     </Application.Resources>
 </Application>

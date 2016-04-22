@@ -89,3 +89,7 @@ C:\Users\kelso\MeetingClock\MeetingClock\bin\Debug\MeetingClock.application
 C:\Users\kelso\MeetingClock\MeetingClock\obj\Debug\MeetingClock.exe.manifest
 C:\Users\kelso\MeetingClock\MeetingClock\obj\Debug\MeetingClock.application
 C:\Users\kelso\MeetingClock\MeetingClock\obj\Debug\MeetingClock.csprojResolveAssemblyReference.cache
+C:\Users\kelso\MeetingClock\MeetingClock\obj\Debug\Views\MeetingView.g.cs
+C:\Users\kelso\MeetingClock\MeetingClock\bin\Debug\Newtonsoft.Json.dll
+C:\Users\kelso\MeetingClock\MeetingClock\bin\Debug\Newtonsoft.Json.xml
+C:\Users\kelso\MeetingClock\MeetingClock\obj\Debug\Views\MeetingView.baml

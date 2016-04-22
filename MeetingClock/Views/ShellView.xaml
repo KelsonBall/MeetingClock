@@ -9,116 +9,19 @@
             mc:Ignorable="d" 
             d:DesignHeight="300" d:DesignWidth="300"
             Width="500"
-            Height="300">
-    <Window.Resources>
-        <Style x:Key="BigText" TargetType="TextBox">
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="FontFamily" Value="Courier New" />
-            <Setter Property="FontSize" Value="24" />
-        </Style>
-        <Style x:Key="BigTextBlock" TargetType="TextBlock">
-            <Setter Property="FontFamily" Value="Courier New" />
-            <Setter Property="FontSize" Value="24" />
-        </Style>
-    </Window.Resources>
+            Height="400">
     <Grid Background="CornflowerBlue" Width="Auto" HorizontalAlignment="Stretch">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <StackPanel Margin="5" Background="White">
-            <Label Content="Average Hourly Rate"/>
-            <TextBox Text="{Binding BillingRate, Converter={StaticResource DoubleToCurrencyConverter}, UpdateSourceTrigger=PropertyChanged}" 
-                     Style="{StaticResource BigText}"/>
-            <Label Content="Number of Participants"/>
-            <TextBox Text="{Binding Participants, UpdateSourceTrigger=PropertyChanged}"
-                     Style="{StaticResource BigText}"/>
-            <Label Content="Alert Interval" />
-            <TextBox Text="{Binding AlertInterval, Converter={StaticResource IntToCurrencyConverter}, UpdateSourceTrigger=PropertyChanged}"
-                     Style="{StaticResource BigText}"/>
-            <Grid Margin="5">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="Stop" Command="{Binding StopMeetingCommand}" 
-                        FontSize="24" 
-                        BorderBrush="Transparent"
-                        BorderThickness="0">
-                    <Button.Style>
-                        <Style TargetType="Button">
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="Button">
-                                        <Border x:Name="Border" 
-                                                  BorderThickness="{TemplateBinding BorderThickness}"
-                                                  Background="{TemplateBinding Background}"
-                                                  BorderBrush="{TemplateBinding BorderBrush}">
-                                            <ContentPresenter Margin="2"
-                                                HorizontalAlignment="Center"
-                                                VerticalAlignment="Center"
-                                                RecognizesAccessKey="True"/>
-                                        </Border>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                            <Setter Property="Background" Value="Transparent"/>
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="LightGray"/>
-                                </Trigger>
-                                <DataTrigger Binding="{Binding IsRunning}" Value="False">
-                                    <Setter Property="Background" Value="CornflowerBlue"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
-                </Button>
-                <Button Grid.Column="1" Content="Run" Command="{Binding StartMeetingCommand}" 
-                        FontSize="24" 
-                        BorderBrush="Transparent"
-                        BorderThickness="0">
-                    <Button.Style>
-                        <Style TargetType="Button">
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="Button">
-                                        <Border x:Name="Border" 
-                                                  BorderThickness="{TemplateBinding BorderThickness}"
-                                                  Background="{TemplateBinding Background}"
-                                                  BorderBrush="{TemplateBinding BorderBrush}">
-                                            <ContentPresenter Margin="2"
-                                                HorizontalAlignment="Center"
-                                                VerticalAlignment="Center"
-                                                RecognizesAccessKey="True"/>
-                                        </Border>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                            <Setter Property="Background" Value="Transparent"/>
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="LightGray"/>
-                                </Trigger>
-                                <DataTrigger Binding="{Binding IsRunning}" Value="True">
-                                    <Setter Property="Background" Value="CornflowerBlue"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
-                </Button>
-            </Grid>
-        </StackPanel>
-        <Grid Grid.Column="1" Background="White" Margin="5" >
-            <TextBlock Foreground="Black"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
-                       Margin="5" 
-                       Text="{Binding MeetingCost, Converter={StaticResource DoubleToCurrencyConverter}}"                    
-                       Style="{StaticResource BigTextBlock}"/>
-        </Grid>
+        <Menu Grid.Row="0">
+            <MenuItem Header="File">
+                <MenuItem Header="Save" Command="{Binding SaveCommand}"/>
+                <MenuItem Header="Load" Command="{Binding LoadCommand}"/>
+            </MenuItem>    
+        </Menu>
+        
+        <local:MeetingView Grid.Row="1" DataContext="{Binding MeetingVm}" />
     </Grid>
 </Window>

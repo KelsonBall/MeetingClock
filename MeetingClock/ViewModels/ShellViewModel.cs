@@ -1,6 +1,13 @@
 ﻿using Prism.Mvvm;
 using System.Media;
+using MeetingClock.Models;
 using Prism.Commands;
+using System.IO;
+using System.Windows;
+using System.Windows.Forms;
+using Newtonsoft.Json;
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
+using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
 
 namespace MeetingClock.ViewModels
 {
@@ -12,138 +19,87 @@ namespace MeetingClock.ViewModels
 
     public class ShellViewModel : BindableBase
     {
-        private const double _updateSeconds = 0.05;
+        private MeetingViewModel _meetingVm;
 
-        private int _alerts = 1;
+        #region Fields
 
-        private double _billingRate;
+       
 
-        private int _participants;
+        #endregion
 
-        private int _alertInterval;
+        #region Properties
 
-        private double _meetingCost;
-        private bool _isRunning;
-
-        public double BillingRate
+        public MeetingViewModel MeetingVm
         {
             get
             {
-                return this._billingRate;
+                return this._meetingVm; 
+                
             }
             set
             {
-                this._billingRate = value;
-                this.OnPropertyChanged(() => this.BillingRate);
+                this._meetingVm = value;
+                this.OnPropertyChanged(() => this.MeetingVm);
             }
         }
 
-        public int Participants
-        {
-            get
-            {
-                return this._participants;
-            }
-            set
-            {
-                this._participants = value;
-                this.OnPropertyChanged(() => this.Participants);
-            }
-        }
+        #endregion
 
-        public int AlertInterval
-        {
-            get
-            {
-                return this._alertInterval;
-            }
-            set
-            {
-                this._alertInterval = value;
-                this.OnPropertyChanged(() => this.AlertInterval);
-            }
-        }
+        #region Commands
 
-        public double MeetingCost
-        {
-            get
-            {
-                return this._meetingCost;
-            }
-            set
-            {
-                this._meetingCost = value;
-                this.OnPropertyChanged(() => this.MeetingCost);
-            }
-        }
+        public ICommand SaveCommand { get; set; }
+        public ICommand LoadCommand { get; set; }
+       
+        #endregion
 
-        public bool IsRunning
-        {
-            get
-            {
-                return this._isRunning;
-            }
-            set
-            {
-                this._isRunning = value;
-                this.OnPropertyChanged(() => this.IsRunning);
-            }
-        }
-
-        public ObservableCollection<Tuple<int,string>> Priorities { get; set; }
-
-        public ICommand StartMeetingCommand { get; set; }
-        public ICommand StopMeetingCommand { get; set; }
-        public ICommand AddPriorityCommand { get; set; }        
+        #region Constructors
 
         public ShellViewModel()
         {
-            this.StartMeetingCommand = new DelegateCommand(this.StartMeeting);
-            this.StopMeetingCommand = new DelegateCommand(this.StopMeeting);
-            this.AddPriorityCommand = new DelegateCommand(this.AppendPriority);
-            this.Priorities = new ObservableCollection<Tuple<int, string>>();
+            this.MeetingVm = new MeetingViewModel();
+            this.SaveCommand = new DelegateCommand(this.Save);
+            this.LoadCommand = new DelegateCommand(this.Load);
         }
 
-        public async Task MeetingLoop()
+        #endregion
+
+        #region Private Methods
+
+        private void Save()
         {
-            while (this.IsRunning)
+            MeetingModel state = this.MeetingVm.Save();
+            SaveFileDialog dialog = new SaveFileDialog();
+            dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            dialog.CreatePrompt = true;
+            dialog.OverwritePrompt = true;
+            dialog.Filter = "Json Files|*.json";            
+            if ((bool)dialog.ShowDialog())
             {
-                Task<double> task = Task.Factory.StartNew(
-                    () =>
-                        {
-                            for (int i = 0; i < 10; i++)
-                            {
-                                Thread.Sleep((int)(ShellViewModel._updateSeconds * 100));
-                                if (!this.IsRunning)
-                                    return this.MeetingCost;
-                            }
-                            double r = this.MeetingCost + ((this.BillingRate/3600) * this.Participants * ShellViewModel._updateSeconds);
-                            if (this.MeetingCost / this.AlertInterval > this._alerts)
-                            {
-                                this._alerts++;
-                                SystemSounds.Beep.Play();
-                            }
-                            return r;
-                        });                
-                this.MeetingCost = await task;
+                string json = JsonConvert.SerializeObject(state);
+                File.WriteAllText(dialog.FileName, json);
             }
         }
 
-        private void StartMeeting()
+        private void Load()
         {
-            this.IsRunning = true;
-            this.MeetingLoop();
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            dialog.CheckFileExists = true;
+            dialog.CheckPathExists = true;
+            dialog.Filter = "Json Files|*.json";
+            dialog.AddExtension = true;            
+            if ((bool)dialog.ShowDialog())
+            {
+                string json = File.ReadAllText(dialog.FileName);
+                this.MeetingVm.Load(JsonConvert.DeserializeObject<MeetingModel>(json));
+            }
         }
+        
+        #endregion
 
-        private void StopMeeting()
-        {
-            this.IsRunning = false;
-        }
+        #region Public Methods      
 
-        private void AppendPriority()
-        {
-            this.Priorities.Add(new Tuple<int, string>(this.Priorities.Count, string.Empty));
-        }
+        #endregion
 
     }
 }

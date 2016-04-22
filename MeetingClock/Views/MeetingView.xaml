@@ -1,0 +1,144 @@
+﻿<UserControl x:Class="MeetingClock.Views.MeetingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MeetingClock.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <StackPanel Margin="5" Background="White">
+            <Label Content="Average Hourly Rate"/>
+            <TextBox Text="{Binding BillingRate, Converter={StaticResource DoubleToCurrencyConverter}, UpdateSourceTrigger=PropertyChanged}" 
+                     Style="{StaticResource BigText}"/>
+            <Label Content="Number of Participants"/>
+            <TextBox Text="{Binding Participants, UpdateSourceTrigger=PropertyChanged}"
+                     Style="{StaticResource BigText}"/>
+            <Label Content="Alert Interval" />
+            <TextBox Text="{Binding AlertInterval, Converter={StaticResource IntToCurrencyConverter}, UpdateSourceTrigger=PropertyChanged}"
+                     Style="{StaticResource BigText}"/>
+            <Grid Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Content="Stop" Command="{Binding StopMeetingCommand}" 
+                        FontSize="24" 
+                        BorderBrush="Transparent"
+                        BorderThickness="0">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="Border" 
+                                                  BorderThickness="{TemplateBinding BorderThickness}"
+                                                  Background="{TemplateBinding Background}"
+                                                  BorderBrush="{TemplateBinding BorderBrush}">
+                                            <ContentPresenter Margin="2"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                RecognizesAccessKey="True"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="LightGray"/>
+                                </Trigger>
+                                <DataTrigger Binding="{Binding IsRunning}" Value="False">
+                                    <Setter Property="Background" Value="CornflowerBlue"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <Button Grid.Column="1" Content="Run" Command="{Binding StartMeetingCommand}" 
+                        FontSize="24" 
+                        BorderBrush="Transparent"
+                        BorderThickness="0">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="Border" 
+                                                  BorderThickness="{TemplateBinding BorderThickness}"
+                                                  Background="{TemplateBinding Background}"
+                                                  BorderBrush="{TemplateBinding BorderBrush}">
+                                            <ContentPresenter Margin="2"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                RecognizesAccessKey="True"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="LightGray"/>
+                                </Trigger>
+                                <DataTrigger Binding="{Binding IsRunning}" Value="True">
+                                    <Setter Property="Background" Value="CornflowerBlue"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </Grid>
+        </StackPanel>
+        <Grid Grid.Column="1" Background="White" Margin="5" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="48" />
+            </Grid.RowDefinitions>
+            <TextBlock Foreground="Black"
+                       Grid.Row="0"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Margin="5" 
+                       Text="{Binding MeetingCost, Converter={StaticResource DoubleToCurrencyConverter}}"                    
+                       Style="{StaticResource BigTextBlock}"/>
+            <Button Grid.Row="1" Width="90" Margin="5" Content="Reset" Command="{Binding ResetCommand}" 
+                        FontSize="24" 
+                        BorderBrush="Transparent"
+                        BorderThickness="0">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border x:Name="Border" 
+                                                  BorderThickness="{TemplateBinding BorderThickness}"
+                                                  Background="{TemplateBinding Background}"
+                                                  BorderBrush="{TemplateBinding BorderBrush}">
+                                        <ContentPresenter Margin="2"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                RecognizesAccessKey="True"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="LightGray"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+        </Grid>
+    </Grid>
+</UserControl>
