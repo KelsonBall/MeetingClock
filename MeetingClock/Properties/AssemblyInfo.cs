@@ -10,9 +10,9 @@ using System.Windows;
 [assembly: AssemblyTitle("MeetingClock")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Schweitzer Engineering Laboratories, Inc.")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("MeetingClock")]
-[assembly: AssemblyCopyright("Copyright © Schweitzer Engineering Laboratories, Inc. 2016")]
+[assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -53,3 +53,5 @@ using System.Windows;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: NeutralResourcesLanguage("en-US")]
+
