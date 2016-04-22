@@ -1,5 +1,6 @@
 ﻿using Prism.Mvvm;
 using System.Media;
+using Prism.Commands;
 
 namespace MeetingClock.ViewModels
 {
@@ -7,23 +8,24 @@ namespace MeetingClock.ViewModels
     using System.Collections.ObjectModel;
     using System.Threading;
     using System.Threading.Tasks;
-    using System.Windows.Input;
-
-    using Microsoft.Practices.Prism.Commands;
+    using System.Windows.Input;    
 
     public class ShellViewModel : BindableBase
     {
-        private int _alerts = 0;
+        private const double _updateSeconds = 0.05;
 
-        private int _billingRate;
+        private int _alerts = 1;
+
+        private double _billingRate;
 
         private int _participants;
 
         private int _alertInterval;
 
         private double _meetingCost;
+        private bool _isRunning;
 
-        public int BillingRate
+        public double BillingRate
         {
             get
             {
@@ -75,32 +77,51 @@ namespace MeetingClock.ViewModels
             }
         }
 
+        public bool IsRunning
+        {
+            get
+            {
+                return this._isRunning;
+            }
+            set
+            {
+                this._isRunning = value;
+                this.OnPropertyChanged(() => this.IsRunning);
+            }
+        }
+
         public ObservableCollection<Tuple<int,string>> Priorities { get; set; }
 
         public ICommand StartMeetingCommand { get; set; }
-
-        public ICommand AddPriorityCommand { get; set; }
+        public ICommand StopMeetingCommand { get; set; }
+        public ICommand AddPriorityCommand { get; set; }        
 
         public ShellViewModel()
         {
             this.StartMeetingCommand = new DelegateCommand(this.StartMeeting);
+            this.StopMeetingCommand = new DelegateCommand(this.StopMeeting);
             this.AddPriorityCommand = new DelegateCommand(this.AppendPriority);
             this.Priorities = new ObservableCollection<Tuple<int, string>>();
         }
 
         public async Task MeetingLoop()
         {
-            while (true)
+            while (this.IsRunning)
             {
                 Task<double> task = Task.Factory.StartNew(
                     () =>
                         {
-                            Thread.Sleep(1500);
-                            double r = (this.MeetingCost + (this.BillingRate / 40.0));
+                            for (int i = 0; i < 10; i++)
+                            {
+                                Thread.Sleep((int)(ShellViewModel._updateSeconds * 100));
+                                if (!this.IsRunning)
+                                    return this.MeetingCost;
+                            }
+                            double r = this.MeetingCost + ((this.BillingRate/3600) * this.Participants * ShellViewModel._updateSeconds);
                             if (this.MeetingCost / this.AlertInterval > this._alerts)
                             {
                                 this._alerts++;
-                                SystemSounds.Asterisk.Play();
+                                SystemSounds.Beep.Play();
                             }
                             return r;
                         });                
@@ -110,7 +131,13 @@ namespace MeetingClock.ViewModels
 
         private void StartMeeting()
         {
+            this.IsRunning = true;
             this.MeetingLoop();
+        }
+
+        private void StopMeeting()
+        {
+            this.IsRunning = false;
         }
 
         private void AppendPriority()

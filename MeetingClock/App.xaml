@@ -1,8 +1,10 @@
 ﻿<Application x:Class="MeetingClock.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converters="clr-namespace:MeetingClock.Converters"
              xmlns:local="clr-namespace:MeetingClock">
     <Application.Resources>
-         
+        <converters:DoubleToCurrencyConverter x:Key="DoubleToCurrencyConverter" />
+        <converters:IntToCurrencyConverter x:Key="IntToCurrencyConverter" />
     </Application.Resources>
 </Application>
